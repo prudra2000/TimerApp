@@ -16,23 +16,10 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Settings2,
   Clock,
   Type,
-  Image as ImageIcon,
   Monitor,
-  MessageSquare,
 } from "lucide-react";
-
-const colors = [
-  { name: "White", value: "#ffffff" },
-  { name: "Black", value: "#000000" },
-  { name: "Red", value: "#ef4444" },
-  { name: "Green", value: "#22c55e" },
-  { name: "Blue", value: "#3b82f6" },
-  { name: "Yellow", value: "#eab308" },
-  { name: "Purple", value: "#a855f7" },
-];
 
 const timeFormats = [
   { label: "HH:MM:SS", value: "HH:MM:SS" },
@@ -42,6 +29,21 @@ const timeFormats = [
 
 const MIN_TEXT_SIZE = 12;
 const MAX_TEXT_SIZE = 500;
+
+interface Screen {
+  width: number;
+  height: number;
+}
+
+interface ScreenDetails {
+  screens: Screen[];
+}
+
+declare global {
+  interface Window {
+    getScreenDetails: () => Promise<ScreenDetails>;
+  }
+}
 
 export default function TimerSettings() {
   const {
@@ -76,9 +78,9 @@ export default function TimerSettings() {
   const handleOpenChange = async (open: boolean) => {
     if (open && "getScreenDetails" in window) {
       try {
-        const details = await (window as any).getScreenDetails();
+        const details = await window.getScreenDetails();
         const screenList = details.screens.map(
-          (screen: any, index: number) => ({
+          (screen: Screen, index: number) => ({
             id: index,
             label: `Screen ${index + 1} (${screen.width}x${screen.height})`,
           })

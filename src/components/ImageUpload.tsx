@@ -3,9 +3,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useTimer } from '@/context/TimerContext';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { ImageIcon, Upload, Trash2 } from 'lucide-react';
+import { Upload, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 export default function ImageUpload() {
   const { backgroundImage, setBackgroundImage } = useTimer();
@@ -16,7 +16,7 @@ export default function ImageUpload() {
     setShowPreview(true);
   }, []);
 
-  const handleImageChange = (file: File) => {
+  const handleImageChange = useCallback((file: File) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -24,7 +24,7 @@ export default function ImageUpload() {
       };
       reader.readAsDataURL(file);
     }
-  };
+  }, [setBackgroundImage]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -43,7 +43,7 @@ export default function ImageUpload() {
     if (file && file.type.startsWith('image/')) {
       handleImageChange(file);
     }
-  }, []);
+  }, [handleImageChange]);
 
   return (
     <div className="space-y-2">
@@ -82,10 +82,12 @@ export default function ImageUpload() {
             Image selected. Will be shown in fullscreen mode.
           </div>
           <div className="relative w-48 aspect-video rounded-md overflow-hidden border group">
-            <img
+            <Image
               src={backgroundImage}
               alt="Background preview"
-              className="object-cover w-full h-full"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
             <button
               onClick={() => setBackgroundImage(null)}

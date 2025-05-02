@@ -35,7 +35,6 @@ export default function TimerControls({
     setCountdownTime,
     title,
     customFont,
-    completionMessage,
   } = useTimer();
   const [isCountdownSet, setIsCountdownSet] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -85,7 +84,7 @@ export default function TimerControls({
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isRunning, setTime, time, timerMode]);
+  }, [isRunning, setTime, time, timerMode, setIsRunning]);
 
   const handleKeyPress = useCallback(
     (e: KeyboardEvent) => {
@@ -125,7 +124,7 @@ export default function TimerControls({
           break;
       }
     },
-    [fullscreen, isRunning, setIsRunning, setTime, timerMode, countdownTime]
+    [fullscreen, isRunning, setIsRunning, setTime, timerMode, countdownTime, setCountdownTime]
   );
 
   useEffect(() => {
@@ -205,12 +204,12 @@ export default function TimerControls({
             >
               <div className="flex gap-6 justify-center">
                 <span className="font-medium">
-                  "Space": {isRunning ? "Pause" : "Start"}
+                  &quot;Space&quot;: {isRunning ? "Pause" : "Start"}
                 </span>
-                <span className="font-medium">"R": Reset</span>
-                <span className="font-medium">"[": Add 1min</span>
-                <span className="font-medium">"]": Subtract 1min</span>
-                <span className="font-medium">"H": Help</span>
+                <span className="font-medium">&quot;R&quot;: Reset</span>
+                <span className="font-medium">&quot;[&quot;: Add 1min</span>
+                <span className="font-medium">&quot;]&quot;: Subtract 1min</span>
+                <span className="font-medium">&quot;H&quot;: Help</span>
                 <span className="font-medium">Esc: Exit</span>
               </div>
             </div>
@@ -318,12 +317,12 @@ export default function TimerControls({
       {showHelp && (
         <div className="flex flex-row gap-3 items-center justify-center bg-white rounded-lg p-4 shadow-sm border border-gray-100">
           <span className="text-gray-700">
-            "Space": {isRunning ? "Pause" : "Start"}
+            &quot;Space&quot;: {isRunning ? "Pause" : "Start"}
           </span>
-          <span className="text-gray-700">"R": Reset</span>
-          <span className="text-gray-700">"[": + 1 Min</span>
-          <span className="text-gray-700">"]": - 1 Min</span>
-          <span className="text-gray-700">"H": Help</span>
+          <span className="text-gray-700">&quot;R&quot;: Reset</span>
+          <span className="text-gray-700">&quot;[&quot;: + 1 Min</span>
+          <span className="text-gray-700">&quot;]&quot;: - 1 Min</span>
+          <span className="text-gray-700">&quot;H&quot;: Help</span>
           <span className="text-gray-700">Esc: Exit</span>
         </div>
       )}

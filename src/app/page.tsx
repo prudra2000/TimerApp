@@ -9,8 +9,31 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Maximize2, Settings, ImageIcon, Timer } from 'lucide-react';
 
+interface ScreenDetails {
+  screens: Array<{
+    width: number;
+    height: number;
+  }>;
+}
+
+interface FullscreenOptions {
+  screen: {
+    width: number;
+    height: number;
+  };
+}
+
+declare global {
+  interface Window {
+    getScreenDetails: () => Promise<ScreenDetails>;
+  }
+  interface Element {
+    requestFullscreen(options?: FullscreenOptions): Promise<void>;
+  }
+}
+
 export default function Home() {
-  const { backgroundImage, setBackgroundImage, targetScreen } = useTimer();
+  const { backgroundImage, targetScreen } = useTimer();
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
@@ -28,11 +51,11 @@ export default function Home() {
     if (!document.fullscreenElement) {
       try {
         if (targetScreen !== null && 'getScreenDetails' in window) {
-          const screenDetails = await (window as any).getScreenDetails();
+          const screenDetails = await window.getScreenDetails();
           const screen = screenDetails.screens[targetScreen];
           if (screen) {
             const element = document.documentElement;
-            await element.requestFullscreen({ screen } as any);
+            await element.requestFullscreen({ screen });
           }
         } else {
           await document.documentElement.requestFullscreen();
